@@ -1,0 +1,116 @@
+# ============================================================
+# RaithuSetu Django Backend — .gitignore
+# ============================================================
+
+# --- Secrets & Environment ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+service_account*.json
+google_credentials*.json
+firebase*.json
+
+# --- Python bytecode & caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# --- Virtual environments ---
+venv/
+.venv/
+env/
+.env/
+ENV/
+virtualenv/
+.virtualenv/
+
+# --- Django specifics ---
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+staticfiles/
+local_settings.py
+
+# --- Media uploads (user-uploaded files — not for version control) ---
+media/
+!media/.gitkeep
+
+# --- Django migrations (keep the files, ignore pycache inside) ---
+# migrations/__pycache__ is already covered by __pycache__/ above
+
+# --- Test & coverage artifacts ---
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.pytest_cache/
+pytest.ini
+test_*.py
+*_test.py
+nosetests.xml
+*.cover
+
+# --- Distribution / packaging ---
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+wheels/
+.eggs/
+pip-wheel-metadata/
+share/python-wheels/
+
+# --- Logs ---
+*.log
+logs/
+celerybeat-schedule
+celerybeat.pid
+
+# --- Temporary files ---
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# --- OS ---
+.DS_Store
+Desktop.ini
+ehthumbs.db
+
+# --- Deployment & CI ---
+.heroku/
+.render/
+Procfile.local
+.railway/
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints/
+*.ipynb
+
+# --- Type checking ---
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+
+# --- Compiled extensions ---
+*.so
+*.dylib
