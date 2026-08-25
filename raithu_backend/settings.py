@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # serves static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -116,20 +117,31 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS Configuration (allows React frontend on port 5173)
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
+# CORS Configuration
+# In production, set CORS_ALLOWED_ORIGINS in .env as a comma-separated list:
+#   CORS_ALLOWED_ORIGINS=https://your-frontend.vercel.app,https://raithusetu.com
+_cors_origins_env = config('CORS_ALLOWED_ORIGINS', default='', cast=Csv())
+
+CORS_ALLOWED_ORIGINS = list(filter(None, [
+    # Always allow local dev
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
-]
+    # Any additional origins from .env (production frontend URL goes here)
+    *_cors_origins_env,
+]))
+
+# Only allow all origins when DEBUG is True (local dev).
+# In production (DEBUG=False) only the explicit list above is used.
+CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOW_CREDENTIALS = True
 
 # Django REST Framework Settings
 REST_FRAMEWORK = {
