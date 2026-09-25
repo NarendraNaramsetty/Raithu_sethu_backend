@@ -1,9 +1,9 @@
 import random
 import logging
-import resend
 from datetime import timedelta
 from django.utils import timezone
 from django.conf import settings
+from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -19,7 +19,6 @@ from .serializers import (
 )
 
 logger = logging.getLogger(__name__)
-resend.api_key = settings.RESEND_API_KEY
 
 STATIC_DEFAULT_PHONE = "+91 98765 43210"
 
@@ -45,7 +44,7 @@ class SendOTPView(APIView):
             email_sent = False
             email_error = None
 
-            # If email is provided, send OTP via Resend API
+            # If email is provided, send OTP via Django SMTP (Gmail app password)
             if email:
                 subject = f"🌱 {otp} is your RaithuSetu Login OTP"
                 plain_message = (
@@ -76,13 +75,14 @@ class SendOTPView(APIView):
                 """
                 
                 try:
-                    resend.Emails.send({
-                        "from": "RaithuSetu <onboarding@resend.dev>",
-                        "to": [email],
-                        "subject": subject,
-                        "html": html_message,
-                        "text": plain_message,
-                    })
+                    send_mail(
+                        subject=subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[email],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
                     email_sent = True
                 except Exception as e:
                     logger.warning(f"Failed to send email OTP to {email}: {e}")
