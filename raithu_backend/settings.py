@@ -192,3 +192,5 @@ GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='')
 # Anthropic Claude AI
 # -------------------------------------------------------
 ANTHROPIC_API_KEY = config('Anthropic_Claude_API_Key', default='')
+
+RESEND_API_KEY = config('RESEND_API_KEY', default='')
