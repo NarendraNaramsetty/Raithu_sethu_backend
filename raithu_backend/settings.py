@@ -190,3 +190,10 @@ GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='')
 # Anthropic Claude AI
 # -------------------------------------------------------
 ANTHROPIC_API_KEY = config('Anthropic_Claude_API_Key', default='')
+
+# -------------------------------------------------------
+# Brevo (Sendinblue) Email Service
+# -------------------------------------------------------
+BREVO_API_KEY = config('BREVO_API_KEY', default='')
+BREVO_SENDER_EMAIL = config('BREVO_SENDER_EMAIL', default='noreply@raithusetu.com')
+BREVO_SENDER_NAME = config('BREVO_SENDER_NAME', default='RaithuSetu')

@@ -9,3 +9,4 @@ requests
 gunicorn
 whitenoise
 anthropic
+sib-api-v3-sdk

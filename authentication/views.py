@@ -17,6 +17,7 @@ from .serializers import (
     VerifyOTPSerializer,
     GoogleAuthSerializer
 )
+from .email_service import send_otp_email
 
 logger = logging.getLogger(__name__)
 
@@ -43,8 +44,9 @@ class SendOTPView(APIView):
             
             email_sent = False
             email_error = None
+            email_method = None
 
-            # If email is provided, send OTP via Django SMTP (Gmail app password)
+            # If email is provided, send OTP via Django email backend / Gmail SMTP
             if email:
                 subject = f"🌱 {otp} is your RaithuSetu Login OTP"
                 plain_message = (
@@ -75,13 +77,14 @@ class SendOTPView(APIView):
                 """
                 
                 try:
+                    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@raithusetu.com')
                     send_mail(
                         subject=subject,
                         message=plain_message,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        from_email=from_email,
                         recipient_list=[email],
                         html_message=html_message,
-                        fail_silently=False,
+                        fail_silently=False
                     )
                     email_sent = True
                 except Exception as e:
@@ -93,11 +96,12 @@ class SendOTPView(APIView):
                 "status": "success",
                 "message": f"OTP successfully sent to {target_display}",
                 "email_sent": email_sent,
+                "email_method": email_method,  # "brevo", "gmail", or None
                 "target": target_display,
                 "demo_otp": otp  # Available for development/testing and offline fallback
             }
             if email_error and settings.DEBUG:
-                response_data["email_notice"] = "Email sending failed. Use demo_otp to test."
+                response_data["email_notice"] = "SMTP not yet fully configured or failed. Use demo_otp to test."
 
             return Response(response_data, status=status.HTTP_200_OK)
             
