@@ -9,4 +9,3 @@ requests
 gunicorn
 whitenoise
 anthropic
-resend
